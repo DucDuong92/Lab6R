@@ -1,13 +1,12 @@
 Package: Lab6R
 Type: Package
-Title: What the Package Does (Title Case)
+Title: This is the package for R lab 6
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Duc Duong
+Maintainer: Duc Duong <mindu931@student.liu.se>
+Description: A package that have difference approachs to solve the knapsack problem.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends: R (>= 3.1.0)
 RoxygenNote: 6.1.0
-
