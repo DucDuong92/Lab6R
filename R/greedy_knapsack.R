@@ -5,16 +5,25 @@
 #' greedy_knapsack
 #'
 #' @param x , is the input weight
-#' @param W , is the input value 
+#' @param W , is the input value
 #'
 #'
 #' @return list , returns a list that contain the maximum value and the list of elements chosen
 #' @export
 
 greedy_knapsack <- function(x,W)
-{ 
+{
+  #Check input
+  if(is.data.frame(x)==FALSE)
+    stop("x must be a data frame")
+  if(is.numeric(W)==FALSE)
+    stop("W should be a number")
+  if (W <=0)
+    stop("W should bigger than 0")
+
+  #+++++++++++++++++++++
   #value per weight
-  vpw <- x[,2]/x[,1] 
+  vpw <- x[,2]/x[,1]
   x$vpw <- vpw
   #order
   x <- x[order(x$vpw, decreasing = TRUE),]
@@ -24,19 +33,19 @@ greedy_knapsack <- function(x,W)
   elements <- c()
   nrow <- nrow(x)
   #sum value until reach the weight
-  for (i in 1:nrow) 
+  for (i in 1:nrow)
   {
     if (x$w[i] < weight)
       {
-    if (weight > 0) 
+    if (weight > 0)
         {
         weight <- weight - x$w[i]
         sum <- sum + x$v[i]
         elements <- c(elements, as.numeric(row.names(x)[i]))
-        }     
+        }
       } else  break()
   }
-  
+
   output <- list(value = round(sum, 0), elements = elements)
 return(output)
 }
