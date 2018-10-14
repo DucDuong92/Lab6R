@@ -10,4 +10,7 @@ Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.1.0)
 RoxygenNote: 6.1.0
-Suggests: testthat
+Suggests: testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
