@@ -4,12 +4,14 @@
 \alias{brute_force_knapsack}
 \title{brute_force_knapsack}
 \usage{
-brute_force_knapsack(x, W)
+brute_force_knapsack(x, W, parallel = FALSE)
 }
 \arguments{
 \item{x}{, is the input weight}
 
 \item{W}{, is the input value}
+
+\item{parallel, }{using parallel processing or not}
 }
 \value{
 list , returns a list that contain the maximum value and the list of elements chosen

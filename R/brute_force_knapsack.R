@@ -22,54 +22,56 @@ brute_force_knapsack <- function(x, W, parallel = FALSE)
   if (W <=0)
     stop("W should bigger than 0")
 
-  #++++++++++++++++++++++++++++++++
-    value <- 0
-    elements <- c()
-    length <- length(x$v)
-    if (parallel==FALSE) {
+  value <- 0
+  elements <- c()
+  length <- length(x$v)
 
-    for (i in 1:length) {
+  #+++++++++++++++++++++++++++++++
+  process <- function(combine_w, combine_v)
+  {
+    sumw<-colSums(combine_w)
+    sumv<-colSums(combine_v)
+
+    #take the cases that have w <= input W
+    components <- which(sumw<=W)
+    #remove the empty case
+    if(length(components) != 0){
+      #print(components)
+
+      #take the max value of this case, assign to value_temp
+      values <- sumv[components]
+      value_temp <- max(values)
+
+      #compare with the global max value
+      if (value_temp > value) {
+        value <<- value_temp
+        index <- which(sumv == value)
+        weight <- combine_w[,index]
+        elements <<- which(x$w == weight)
+      }
+    }
+  }
+
+  #++++++++++++++++++++++++++++++++
+
+  if (parallel==FALSE)
+  {
+
+    for (i in 1:length)
+      {
       #scan the input value, combine all posible cases
       combine_w<-as.data.frame(combn(x[,1], i))
       combine_v<-as.data.frame(combn(x[,2], i))
-      sumw<-colSums(combine_w)
-      sumv<-colSums(combine_v)
 
-      #take the cases that have w <= input W
-      components <- which(sumw<=W)
-      #remove the empty case
-      if(length(components) != 0){
-        #print(components)
-
-        #take the max value of this case, assign to value_temp
-        values <- sumv[components]
-        value_temp <- max(values)
-
-        #compare with the global max value
-        if (value_temp > value) {
-          value <- value_temp
-          index <- which(sumv == value)
-          weight <- combine_w[,index]
-          elements <- which(x$w == weight)
-        }
+      process(combine_w, combine_v)
       }
     }
-
-    # This loop make the systerm run slowly
-    #  to pass the test suite "expect_true(as.numeric(st)[2] > 0.00)"
-    #  maybe because my computer is fast...
-    #for (i in 10000) {
-    #  i <- i+1
-    #  }
-    }
-    else {
-
-      #In the parallel version, I use all cores to calculate the combination matrix.
+  else
+  {   #In the parallel version, I use all cores to calculate the combination matrix.
       #In my opinion, this is the most time comming part of this function.
 
-      library(parallel)
-      numCores <- detectCores()
-      cl <- makeCluster(numCores)
+      numCores <- parallel::detectCores()
+      cl <- parallel::makeCluster(numCores)
 
       f1 <- function(i) {
         combine_w<-combn(x[,1], i)
@@ -80,8 +82,8 @@ brute_force_knapsack <- function(x, W, parallel = FALSE)
       }
 
       # Parallel processing by parLapply
-      combine_w_list <- parLapply(cl, 1:length, f1)
-      combine_v_list <- parLapply(cl, 1:length, f2)
+      combine_w_list <- parallel::parLapply(cl, 1:length, f1)
+      combine_v_list <- parallel::parLapply(cl, 1:length, f2)
 
       stopCluster(cl)
 
@@ -90,28 +92,7 @@ brute_force_knapsack <- function(x, W, parallel = FALSE)
         combine_w <- as.data.frame(combine_w_list[[i]])
         combine_v <- as.data.frame(combine_v_list[[i]])
 
-        sumw<-colSums(combine_w)
-        sumv<-colSums(combine_v)
-
-
-        #take the cases that have w <= input W
-        components <- which(sumw<=W)
-        #remove the empty case
-        if(length(components) != 0){
-          #print(components)
-
-          #take the max value of this case, assign to value_temp
-          values <- sumv[components]
-          value_temp <- max(values)
-
-          #compare with the global max value
-          if (value_temp > value) {
-            value <- value_temp
-            index <- which(sumv == value)
-            weight <- combine_w[,index]
-            elements <- which(x$w == weight)
-          }
-        }
+        process(combine_w, combine_v)
       }
 
   }
@@ -121,3 +102,4 @@ brute_force_knapsack <- function(x, W, parallel = FALSE)
   }
 
 #brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500)
+#brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500, parallel = TRUE)
