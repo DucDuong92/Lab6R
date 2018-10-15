@@ -57,7 +57,7 @@ system.time(a <- brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500))
 Question 1.1.8: What performance gain could you get by parallelizing brute force search?
 
 ```{r}
-system.time(a <-brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500, parallel = TRUE))
+system.time(a <-brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500,parallel = TRUE))
 ```
 
 Compare the time when having parallel, we see that the user time is improved, but not too much. Maybe because I only implement parallel for calculating the combination. In contrast, the elapsed time is higher. Maybe because it takes time to start 2 cores, but the work of each core is not so much.
