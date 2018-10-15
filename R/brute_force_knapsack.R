@@ -47,7 +47,7 @@ brute_force_knapsack <- function(x, W, parallel = FALSE)
         value <<- value_temp
         index <- which(sumv == value)
         weight <- combine_w[,index]
-        elements <<- which(x$w == weight)
+        elements <<- match(weight, x$w)
       }
     }
   }
