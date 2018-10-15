@@ -74,7 +74,7 @@ brute_force_knapsack <- function(x, W, parallel = FALSE)
     }
   else
   {   #In the parallel version, I use all cores to calculate the combination matrix.
-      #In my opinion, this is the most time comming part of this function.
+      #In my opinion, this is the most time consumming part of this function.
 
       numCores <- parallel::detectCores()
       cl <- parallel::makeCluster(numCores)
@@ -91,7 +91,7 @@ brute_force_knapsack <- function(x, W, parallel = FALSE)
       combine_w_list <- parallel::parLapply(cl, 1:length, f1)
       combine_v_list <- parallel::parLapply(cl, 1:length, f2)
 
-      stopCluster(cl)
+      parallel::stopCluster(cl)
 
       for (i in 1:length) {
 
