@@ -39,7 +39,7 @@ dynamic_knapsack <- function(x, W)
 
       if(w[i] > j)
         {m[i,j] <- m[i-1,j]
-      }
+        }
       else {
         value <-max(m[(i-1),j],(m[(i-1),(j-w[i])] + v[i]))
         m[i, j]=value
